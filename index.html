@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missão Kaleb - 4 Anos</title>
+
+    <!-- Prévia ao compartilhar no WhatsApp/redes sociais -->
+    <meta property="og:title" content="Missão Kaleb • 4 Anos">
+    <meta property="og:description" content="O Kaleb está formando sua equipe de super-heróis! Confira o convite.">
+    <meta property="og:image" content="https://kaleb4anos.netlify.app/imagemzap.png">
+    <meta property="og:url" content="https://kaleb4anos.netlify.app/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #000;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        @keyframes intrusoFlash {
+            0% { background: #800a10; }
+            50% { background: #ff0000; }
+            100% { background: #800a10; }
+        }
+
+        body.alarm-active {
+            animation: intrusoFlash 0.3s infinite;
+        }
+
+        @keyframes zoomInEffect {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.08); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .screen {
+            display: none;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            padding: 30px 20px 25px 20px;
+            background: #141418;
+            border: 3px solid #ffcc00;
+            border-radius: 24px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            position: relative;
+            z-index: 5;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Tela de Acesso Concedido */
+        #access-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #0b0b0e;
+            z-index: 150;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        #access-screen.active {
+            display: flex;
+            animation: zoomInEffect 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .access-content {
+            border: 3px solid #ffcc00;
+            background: #141418;
+            padding: 35px 25px;
+            border-radius: 24px;
+            max-width: 380px;
+            width: 90%;
+            box-shadow: 0 0 50px rgba(255, 204, 0, 0.3);
+        }
+
+        .floating-audio-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(20, 20, 24, 0.85);
+            color: #ffcc00;
+            border: 2px solid #ffcc00;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        .floating-audio-btn.active {
+            background: #ffcc00;
+            color: #000;
+        }
+
+        .logo-badge {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #e50914, #990000);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 12px auto;
+            font-size: 35px;
+            font-weight: bold;
+            color: #ffcc00;
+            border: 3px solid #ffcc00;
+        }
+
+        h1 {
+            font-size: 19px;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+            color: #ffcc00;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        p {
+            font-size: 13px;
+            color: #d1d1d6;
+            margin-bottom: 15px;
+        }
+
+        .password-display {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .letter-box {
+            width: 42px;
+            height: 52px;
+            background: #1f1f26;
+            border: 2px solid #3a3a48;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff3b30;
+        }
+
+        .letter-box.fixed {
+            color: #ffcc00;
+            border-color: #ffcc00;
+            background: rgba(255, 204, 0, 0.1);
+        }
+
+        .letter-box.filled {
+            border-color: #ff3b30;
+            color: #ffffff;
+            background: rgba(255, 59, 48, 0.2);
+        }
+
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 7px;
+            background: #0f0f13;
+            padding: 12px;
+            border-radius: 14px;
+            border: 1px solid #2c2c38;
+        }
+
+        .key {
+            background: #23232e;
+            color: #ffffff;
+            border: 1px solid #3f3f52;
+            padding: 12px 0;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .key:active {
+            transform: scale(0.92);
+            background: #e50914;
+        }
+
+        .key.delete {
+            grid-column: span 2;
+            background: #3a1414;
+            color: #ff8080;
+        }
+
+        .key.enter {
+            grid-column: span 3;
+            background: linear-gradient(135deg, #e50914, #b20710);
+            color: #ffffff;
+        }
+
+        .skip-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed #ffcc00;
+            color: #ffcc00;
+            font-size: 13px;
+            padding: 8px 16px;
+            border-radius: 10px;
+            margin-top: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        #alert-box {
+            display: none;
+            color: #ff1a1a;
+            font-weight: 900;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        /* TELA DE VÍDEO DO KALEB */
+        #video-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 120;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #video-screen.active {
+            display: flex;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+
+        .video-skip-corner {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(20, 20, 24, 0.8);
+            border: 2px solid #ffcc00;
+            color: #ffcc00;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 130;
+        }
+
+        /* TELA PRINCIPAL DO CONVITE */
+        #main-invite {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 100;
+        }
+
+        #main-invite.active {
+            display: block;
+        }
+
+        .invite-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* ÁREAS CLICÁVEIS DOS BOTÕES (WHATSAPP, MAPA, PRESENTE) */
+        .hotspot-container {
+            position: absolute;
+            bottom: 3%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;
+            max-width: 420px;
+            height: 16%;
+            display: flex;
+            justify-content: space-between;
+            z-index: 110; /* Bem acima de tudo para garantir o clique */
+        }
+
+        .hotspot {
+            width: 31%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        /* MODAL DA IMAGEM DE DICAS */
+        #gift-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .gift-image {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 12px;
+            border: 2px solid #ffcc00;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #e50914;
+            color: #fff;
+            border: 2px solid #ffcc00;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" src="musica.mp3" preload="auto" loop></audio>
+
+    <!-- TELA 1: SENHA -->
+    <div class="screen active" id="puzzle-container">
+        <button class="floating-audio-btn" id="audio-btn" onclick="unlockAudio()">
+            <span id="audio-icon">🔇</span> <span id="audio-text">Ativar Áudio</span>
+        </button>
+
+        <div class="logo-badge">i</div>
+        <h1>Missão Kaleb • 4 Anos</h1>
+
+        <div id="alert-box">🚫 ACESSO NEGADO 🚫</div>
+        <p id="instruction-text">Digite a senha para entrar na missão:</p>
+
+        <div class="password-display">
+            <div class="letter-box fixed">K</div>
+            <div class="letter-box" id="slot-0">_</div>
+            <div class="letter-box" id="slot-1">_</div>
+            <div class="letter-box" id="slot-2">_</div>
+            <div class="letter-box fixed">B</div>
+        </div>
+
+        <div class="keyboard">
+            <button class="key" onclick="typeLetter('A')">A</button>
+            <button class="key" onclick="typeLetter('E')">E</button>
+            <button class="key" onclick="typeLetter('I')">I</button>
+            <button class="key" onclick="typeLetter('O')">O</button>
+            <button class="key" onclick="typeLetter('U')">U</button>
+            <button class="key" onclick="typeLetter('L')">L</button>
+            <button class="key" onclick="typeLetter('M')">M</button>
+            <button class="key" onclick="typeLetter('N')">N</button>
+            <button class="key" onclick="typeLetter('R')">R</button>
+            <button class="key" onclick="typeLetter('S')">S</button>
+            <button class="key delete" onclick="deleteLetter()">APAGAR</button>
+            <button class="key enter" onclick="checkPassword()">CONFIRMAR</button>
+        </div>
+
+        <button class="skip-btn" onclick="goToMainInvite()">⏭️ Pular abertura</button>
+    </div>
+
+    <!-- TELA DE ACESSO CONCEDIDO -->
+    <div id="access-screen">
+        <div class="access-content">
+            <div class="logo-badge" style="width: 60px; height: 60px; font-size: 28px;">⚡</div>
+            <h1 style="color: #ffcc00; font-size: 18px; margin-bottom: 6px;">ACESSO CONCEDIDO</h1>
+            <p style="margin-bottom: 0; color: #fff;">Iniciando protocolo secreto...</p>
+        </div>
+    </div>
+
+    <!-- TELA DE VÍDEO -->
+    <div id="video-screen">
+        <button class="video-skip-corner" onclick="goToMainInvite()">Pular Vídeo ⏭️</button>
+        <video id="kaleb-video" playsinline webkit-playsinline preload="auto">
+            <source src="video-kaleb.mp4" type="video/mp4">
+            Seu navegador não suporta vídeos.
+        </video>
+    </div>
+
+    <!-- TELA PRINCIPAL DO CONVITE -->
+    <div id="main-invite">
+        <img src="informacoes-kaleb.png" alt="Informações Kaleb" class="invite-bg">
+
+        <div class="hotspot-container">
+            <div class="hotspot" onclick="openWhatsApp()" title="Confirme sua presença"></div>
+            <div class="hotspot" onclick="openMaps()" title="Local da festa"></div>
+            <div class="hotspot" onclick="openGiftModal()" title="Dicas de presente"></div>
+        </div>
+    </div>
+
+    <!-- MODAL DA IMAGEM DE DICAS -->
+    <div id="gift-modal">
+        <button class="close-modal" onclick="closeGiftModal()">X</button>
+        <img src="dicas.png" alt="Dicas de Presente" class="gift-image">
+    </div>
+
+    <script>
+        const correctLetters = ['A', 'L', 'E'];
+        let currentInput = [];
+        const bgMusic = document.getElementById('bg-music');
+        const kalebVideo = document.getElementById('kaleb-video');
+        let audioUnlocked = false;
+
+        // Reforça que o vídeo nunca use os controles nativos do navegador
+        kalebVideo.controls = false;
+        kalebVideo.removeAttribute('controls');
+
+        function unlockAudio() {
+            audioUnlocked = true;
+            const btn = document.getElementById('audio-btn');
+            const icon = document.getElementById('audio-icon');
+            const text = document.getElementById('audio-text');
+
+            icon.textContent = "🔊";
+            text.textContent = "Áudio Ativado";
+            btn.classList.add('active');
+
+            bgMusic.play().then(() => {
+                bgMusic.pause();
+                bgMusic.currentTime = 0;
+            }).catch(e => console.log(e));
+        }
+
+        function typeLetter(letter) {
+            if (currentInput.length < 3) {
+                currentInput.push(letter);
+                updateDisplay();
+            }
+        }
+
+        function deleteLetter() {
+            if (currentInput.length > 0) {
+                currentInput.pop();
+                updateDisplay();
+            }
+        }
+
+        function updateDisplay() {
+            for (let i = 0; i < 3; i++) {
+                const slot = document.getElementById(`slot-${i}`);
+                if (currentInput[i]) {
+                    slot.textContent = currentInput[i];
+                    slot.classList.add('filled');
+                } else {
+                    slot.textContent = "_";
+                    slot.classList.remove('filled');
+                }
+            }
+        }
+
+        function playAlarmSound() {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sawtooth';
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+            const duration = 1.4; // duração total da sirene, em segundos
+            gain.gain.setValueAtTime(0.25, now);
+
+            // Sobe e desce a frequência algumas vezes, tipo sirene de alarme
+            let t = now;
+            for (let i = 0; i < 3; i++) {
+                osc.frequency.linearRampToValueAtTime(950, t + 0.25);
+                osc.frequency.linearRampToValueAtTime(450, t + 0.5);
+                t += 0.5;
+            }
+
+            gain.gain.linearRampToValueAtTime(0.0001, now + duration);
+
+            osc.start(now);
+            osc.stop(now + duration);
+        }
+
+        function checkPassword() {
+            const isCorrect = currentInput.length === 3 &&
+                              currentInput[0] === correctLetters[0] &&
+                              currentInput[1] === correctLetters[1] &&
+                              currentInput[2] === correctLetters[2];
+
+            if (isCorrect) {
+                document.body.classList.remove('alarm-active');
+                document.getElementById('puzzle-container').classList.remove('active');
+
+                bgMusic.pause();
+                bgMusic.currentTime = 0;
+
+                document.getElementById('access-screen').classList.add('active');
+
+                setTimeout(() => {
+                    document.getElementById('access-screen').classList.remove('active');
+                    document.getElementById('video-screen').classList.add('active');
+
+                    kalebVideo.controls = false;
+                    kalebVideo.play().catch(e => {
+                        console.log("Play automático bloqueado:", e);
+                    });
+                }, 1200);
+
+                kalebVideo.onended = function() {
+                    goToMainInvite();
+                };
+            } else {
+                document.body.classList.add('alarm-active');
+                document.getElementById('alert-box').style.display = 'block';
+                document.getElementById('instruction-text').style.display = 'none';
+                playAlarmSound();
+
+                setTimeout(() => {
+                    document.body.classList.remove('alarm-active');
+                    document.getElementById('alert-box').style.display = 'none';
+                    document.getElementById('instruction-text').style.display = 'block';
+                }, 1500);
+
+                currentInput = [];
+                updateDisplay();
+            }
+        }
+
+        function goToMainInvite() {
+            document.body.classList.remove('alarm-active');
+            document.getElementById('puzzle-container').classList.remove('active');
+            document.getElementById('access-screen').classList.remove('active');
+
+            // FORÇA o sumiço completo da tela de vídeo para liberar os cliques
+            const videoScreen = document.getElementById('video-screen');
+            videoScreen.classList.remove('active');
+            videoScreen.style.display = 'none';
+
+            // Descarta o vídeo de verdade (evita "frame fantasma" grudado
+            // por cima da página em navegadores embutidos/webviews)
+            kalebVideo.pause();
+            kalebVideo.removeAttribute('src');
+            kalebVideo.load();
+
+            // Ativa o convite principal e garante prioridade de toque nos botões
+            document.getElementById('main-invite').classList.add('active');
+
+            bgMusic.play().catch(e => console.log("Áudio de fundo ativado."));
+        }
+
+        function openWhatsApp() {
+            // Abre em nova aba: a aba do convite nunca é recarregada
+            window.open("https://wa.me/qr/UIXYMDVUMFH6K1", "_blank", "noopener");
+        }
+
+        function openMaps() {
+            window.open("https://www.google.com.br/maps/place/Pra%C3%A7a+Maria+Montessori,+106+-+Vila+Maria+Alta,+S%C3%A3o+Paulo+-+SP,+02127-030/@-23.5009067,-46.5893022,17z/data=!4m6!3m5!1s0x94ce5f53c5a4f0fd:0x4802b9352871c5a9!8m2!3d-23.5009067!4d-46.5893022!16s%2Fg%2F11csfrfl95", "_blank", "noopener");
+        }
+
+        function openGiftModal() {
+            document.getElementById('gift-modal').style.display = 'flex';
+        }
+
+        function closeGiftModal() {
+            document.getElementById('gift-modal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
